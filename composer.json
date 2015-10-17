@@ -1,6 +1,7 @@
 {
     "name": "digitalrift/dit-framework",
     "description": "DiT Framework",
+    "license": "MIT",
     "authors": [
       {
         "name": "Yuriy Seleznev",
