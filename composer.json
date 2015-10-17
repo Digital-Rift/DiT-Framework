@@ -1,0 +1,16 @@
+{
+    "name": "digitalrift/dit-framework",
+    "description": "DiT Framework",
+    "authors": [
+      {
+        "name": "Yuriy Seleznev",
+        "email": "sendelius@gmail.com"
+      },{
+        "name": "Alex Kalantaryan",
+        "email": "alex_phant0m@mail.ru"
+      }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+    }
+}
