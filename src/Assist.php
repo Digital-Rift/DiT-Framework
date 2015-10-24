@@ -6,11 +6,11 @@
  * @author Alex Kalantaryan <alex_phant0m@mail.ru>
  * @license MIT https://opensource.org/licenses/MIT
  */
-namespace Core\Library;
+namespace DiTFramework;
 
 /**
  * Class Assist
- * @package Core\Library
+ * @package DiTFramework
  */
 class Assist{
 	public $request;

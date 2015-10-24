@@ -2,16 +2,17 @@
 /**
  * @project DiT Framework
  * @link http://www.dit-cms.org
- * @author Юрий Сергеевич Селезнев
- * @author Алексей Рубенович Калантарян
+ * @author Yuriy Seleznev <sendelius@gmail.com>
+ * @author Alex Kalantaryan <alex_phant0m@mail.ru>
+ * @license MIT https://opensource.org/licenses/MIT
  */
+namespace DiTFramework;
 
-namespace Core\Library;
-use Core\Library\Errors\ErrorHandler;
+use DiTFramework\Errors\ErrorHandler;
 
 /**
  * Class Dispatcher
- * @package Core\Library
+ * @package DiTFramework
  */
 class Dispatcher {
 
@@ -77,11 +78,11 @@ class Dispatcher {
 		$result['controller'] = ucfirst($result['controller']);
 		$result['module'] = ucfirst($result['module']);
 		if(strlen($result['module'])>0){
-			$file = BASE_DIR.MODULES_FOLDER.DS.$result['module'].DS.CONTROLLERS_FOLDER.DS.$result['controller'].'Controller.php';
-			$controller = MODULES_FOLDER.'\\'.$result['module'].'\\'.CONTROLLERS_FOLDER.'\\'.$result['controller'].'Controller';
+			$file = APP_DIR.MODULES_FOLDER.DS.$result['module'].DS.CONTROLLERS_FOLDER.DS.$result['controller'].'Controller.php';
+			$controller = APP_NAMESPACE.'\\'.MODULES_FOLDER.'\\'.$result['module'].'\\'.CONTROLLERS_FOLDER.'\\'.$result['controller'].'Controller';
 		}else{
-			$file = BASE_DIR.CONTROLLERS_FOLDER.DS.$result['controller'].'Controller.php';
-			$controller = CONTROLLERS_FOLDER.'\\'.$result['controller'].'Controller';
+			$file = APP_DIR.CONTROLLERS_FOLDER.DS.$result['controller'].'Controller.php';
+			$controller = APP_NAMESPACE.'\\'.CONTROLLERS_FOLDER.'\\'.$result['controller'].'Controller';
 		}
 		if(file_exists($file)){
 			$this->controller = new $controller();

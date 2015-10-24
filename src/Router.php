@@ -2,14 +2,15 @@
 /**
  * @project DiT Framework
  * @link http://www.dit-cms.org
- * @author Юрий Сергеевич Селезнев
- * @author Алексей Рубенович Калантарян
+ * @author Yuriy Seleznev <sendelius@gmail.com>
+ * @author Alex Kalantaryan <alex_phant0m@mail.ru>
+ * @license MIT https://opensource.org/licenses/MIT
  */
-namespace Core\Library;
+namespace DiTFramework;
 
 /**
  * Class Router
- * @package Core\Library
+ * @package DiTFramework
  */
 class Router {
 
@@ -32,13 +33,13 @@ class Router {
 	}
 
 	public function rule($rule,$options=array()){
-		$this->rules[WEB_ROOT.$rule] = $options;
+		$this->rules[$rule] = $options;
 	}
 
 	public function rules($rules=array()){
 		$outRules = array();
 		foreach($rules as $k=>$rule){
-			$outRules[WEB_ROOT.$k] = $rule;
+			$outRules[$k] = $rule;
 		}
 		$this->rules = array_merge($this->rules,$outRules);
 	}

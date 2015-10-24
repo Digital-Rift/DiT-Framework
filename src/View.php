@@ -2,14 +2,15 @@
 /**
  * @project DiT Framework
  * @link http://www.dit-cms.org
- * @author Юрий Сергеевич Селезнев
- * @author Алексей Рубенович Калантарян
+ * @author Yuriy Seleznev <sendelius@gmail.com>
+ * @author Alex Kalantaryan <alex_phant0m@mail.ru>
+ * @license MIT https://opensource.org/licenses/MIT
  */
-namespace Core\Library;
+namespace DiTFramework;
 
 /**
  * Class View
- * @package Core\Library
+ * @package DiTFramework
  */
 class View extends Assist{
 
@@ -22,7 +23,7 @@ class View extends Assist{
 			if($this->vars!=false){
 				extract((array)$this->vars);
 			}
-			require BASE_DIR.VIEWS_FOLDER.DS.$view.$this->ext;
+			require APP_DIR.VIEWS_FOLDER.DS.$view.$this->ext;
 		}else{
 			trigger_error(i18n::t('View not found'));
 		}

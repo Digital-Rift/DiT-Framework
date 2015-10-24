@@ -7,12 +7,13 @@
  * @license MIT https://opensource.org/licenses/MIT
  */
 namespace DiTFramework;
+use DiTFramework\Errors\ErrorHandler;
 
 /**
- * Class DiT
- * @package Core
+ * Class App
+ * @package DiTFramework
  */
-class Bootstrap {
+class App {
 	protected $rules = array();
 
 	public function init(){
@@ -20,17 +21,20 @@ class Bootstrap {
 		ErrorHandler::$start_time = microtime(true);
 
 		if(!defined('DS')) define('DS', DIRECTORY_SEPARATOR);
-		if(!defined('BASE_DIR')) define('BASE_DIR', __DIR__.DS);
-		if(!defined('CACHE_FOLDER')) define('CACHE_FOLDER', 'Cache');
-		if(!defined('PUBLIC_FOLDER')) define('PUBLIC_FOLDER', 'Public');
-		if(!defined('MODULES_FOLDER')) define('MODULES_FOLDER', 'Modules');
-		if(!defined('CONTROLLERS_FOLDER')) define('CONTROLLERS_FOLDER', 'Controllers');
-		if(!defined('MODELS_FOLDER')) define('MODELS_FOLDER', 'Models');
-		if(!defined('VIEWS_FOLDER')) define('VIEWS_FOLDER', 'Views');
-		if(!defined('LOGS_FOLDER')) define('LOGS_FOLDER', 'Logs');
+		if(!defined('FRAMEWORK_DIR')) define('FRAMEWORK_DIR', __DIR__.DS);
+		if(!defined('APP_DIR')) define('APP_DIR', FRAMEWORK_DIR);
+		if(!defined('APP_NAMESPACE')) define('APP_NAMESPACE', 'MyApp');
+		if(!defined('CACHE_FOLDER')) define('CACHE_FOLDER', 'cache');
+		if(!defined('PUBLIC_FOLDER')) define('PUBLIC_FOLDER', 'public');
+		if(!defined('MODULES_FOLDER')) define('MODULES_FOLDER', 'modules');
+		if(!defined('CONTROLLERS_FOLDER')) define('CONTROLLERS_FOLDER', 'controllers');
+		if(!defined('MODELS_FOLDER')) define('MODELS_FOLDER', 'models');
+		if(!defined('VIEWS_FOLDER')) define('VIEWS_FOLDER', 'views');
+		if(!defined('LOGS_FOLDER')) define('LOGS_FOLDER', 'logs');
 		if(!defined('COOKIE_LIFE_TIME')) define('COOKIE_LIFE_TIME', 3600);
 		if(!defined('SITE_NAME')) define('SITE_NAME', 'default');
 		if(!defined('DEV_MODE')) define('DEV_MODE', false);
+		if(!defined('SAVE_LOGS')) define('SAVE_LOGS', false);
 		if(!defined('WEB_ROOT')) define('WEB_ROOT', '/');
 
 		if(DEV_MODE==true){
