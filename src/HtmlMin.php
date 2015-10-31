@@ -6,11 +6,11 @@
  * @author Alex Kalantaryan <alex_phant0m@mail.ru>
  * @license MIT https://opensource.org/licenses/MIT
  */
-namespace DiTFramework\Minify;
+namespace DiTFramework;
 
 /**
  * Class HtmlMin
- * @package DiTFramework\Minify
+ * @package DiTFramework
  */
 class HtmlMin{
 	public static function minify($buffer){

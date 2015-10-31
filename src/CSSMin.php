@@ -6,11 +6,11 @@
  * @author Alex Kalantaryan <alex_phant0m@mail.ru>
  * @license MIT https://opensource.org/licenses/MIT
  */
-namespace DiTFramework\Minify;
+namespace DiTFramework;
 
 /**
  * Class CSSMin
- * @package DiTFramework\Minify
+ * @package DiTFramework
  */
 class CSSMin{
 	public static function minify($source){

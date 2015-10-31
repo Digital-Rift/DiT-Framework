@@ -55,4 +55,48 @@ class Assist{
 	public function setMetaKeywords($value){
 		$this->registry->setInGroup('DiT-Meta','keywords',$value);
 	}
+
+	public function setLoadPackageScripts($array){
+		if(is_array($array)){
+			$this->registry->set('DiT-ScriptsLoadPackages',$array,true);
+		}
+	}
+
+	public function setLoadPackageStyles($array){
+		if(is_array($array)){
+			$this->registry->set('DiT-StylesLoadPackages',$array,true);
+		}
+	}
+
+	public function setScripts($array,$package='public'){
+		if(is_array($array)){
+			$files = array();
+			$created = array();
+			foreach($array as $v){
+				$file = DIT_APP_DIR.$v;
+				if (file_exists($file)){
+					$files[] = $file;
+					$created[] = filemtime($file);
+				}
+			}
+			$this->registry->setInGroup('DiT-ScriptsFiles',$package,$files,true);
+			$this->registry->setInGroup('DiT-ScriptsCreated',$package,$created,true);
+		}
+	}
+
+	public function setStyles($array,$package='public'){
+		if(is_array($array)){
+			$files = array();
+			$created = array();
+			foreach($array as $v){
+				$file = DIT_APP_DIR.$v;
+				if (file_exists($file)){
+					$files[] = $file;
+					$created[] = filemtime($file);
+				}
+			}
+			$this->registry->setInGroup('DiT-StylesFiles',$package,$files,true);
+			$this->registry->setInGroup('DiT-StylesCreated',$package,$created,true);
+		}
+	}
 }

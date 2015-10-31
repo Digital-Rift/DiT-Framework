@@ -7,6 +7,7 @@
  * @license MIT https://opensource.org/licenses/MIT
  */
 namespace DiTFramework;
+use JsMin\Minify;
 
 /**
  * Class View
@@ -17,10 +18,13 @@ class View extends Assist{
 	protected $ext = '.phtml';
 	public $vars;
 	public $meta;
+	public $scripts = array();
+	public $styles = array();
 
 	public function render($view){
 		if(!empty($view)){
 			$this->compileMeta();
+			$this->compileStylesAndScripts();
 			$this->vars = $this->registry->getGroup('DiT-View');
 			if($this->vars!=false){
 				extract((array)$this->vars);
@@ -37,6 +41,54 @@ class View extends Assist{
 
 	public function getMeta(){
 		return $this->meta;
+	}
+
+	public function getScripts(){
+		if(count($this->scripts)>0){
+			$out = null;
+			if(isset($this->scripts['public'])) $out .= $this->scripts['public'];
+			$load = $this->registry->get('DiT-ScriptsLoadPackages');
+			if(is_array($load)){
+				foreach($load as $package){
+					if(isset($this->scripts[$package]) AND $package!='public') $out .= $this->scripts[$package];
+				}
+			}
+			return $out;
+		}else{
+			return null;
+		}
+	}
+
+	public function getStyles(){
+		if(count($this->styles)>0){
+			$out = null;
+			if(isset($this->styles['public'])) $out .= $this->styles['public'];
+			$load = $this->registry->get('DiT-StylesLoadPackages');
+			if(is_array($load)){
+				foreach($load as $package){
+					if(isset($this->styles[$package]) AND $package!='public') $out .= $this->styles[$package];
+				}
+			}
+			return $out;
+		}else{
+			return null;
+		}
+	}
+
+	public function getPackageScripts($package='public'){
+		if(isset($this->scripts[$package])){
+			return $this->scripts[$package];
+		}else{
+			return null;
+		}
+	}
+
+	public function getPackageStyles($package='public'){
+		if(isset($this->styles[$package])){
+			return $this->styles[$package];
+		}else{
+			return null;
+		}
 	}
 
 	public function getTemplate($key){
@@ -68,5 +120,51 @@ class View extends Assist{
 			}
 		}
 		$this->meta = $result;
+	}
+
+	private function compileStylesAndScripts(){
+		$scriptsFiles = $this->registry->getGroup('DiT-ScriptsFiles');
+		$scriptsCreated = $this->registry->getGroup('DiT-ScriptsCreated');
+		if(is_array($scriptsFiles)) {
+			foreach ($scriptsFiles as $package => $files) {
+				if (isset($scriptsCreated[$package])) {
+					$scripts_hash = md5(serialize($scriptsCreated[$package]));
+					$name = 'scripts_' . $package . '_' . $scripts_hash . '.js';
+					$cache = new Cache($name, true);
+					if (!$cache->exist()) {
+						$scripts_min = null;
+						array_map("unlink", glob(DIT_PUBLIC_DIR . 'cache' . DS . DIT_SITE_NAME . DS . 'scripts_' . $package . '_*'));
+						foreach ($files as $file) {
+							$scripts_min .= file_get_contents($file) . "\n";
+						}
+						$scripts_min = Minify::minify($scripts_min);
+						$cache->save($scripts_min, true);
+					}
+					$this->scripts[$package] = '<script src="' . DIT_WEB_ROOT . 'cache/' . DIT_SITE_NAME . '/' . $name . '"></script>' . "\n";
+				}
+			}
+		}
+
+		$stylesFiles = $this->registry->getGroup('DiT-StylesFiles');
+		$stylesCreated = $this->registry->getGroup('DiT-StylesCreated');
+		if(is_array($stylesFiles)) {
+			foreach ($stylesFiles as $package => $files) {
+				if (isset($stylesCreated[$package])) {
+					$styles_hash = md5(serialize($stylesCreated[$package]));
+					$name = 'styles_' . $package . '_' . $styles_hash . '.css';
+					$cache = new Cache($name, true);
+					if (!$cache->exist()) {
+						$styles_min = null;
+						array_map("unlink", glob(DIT_PUBLIC_DIR . 'cache' . DS . DIT_SITE_NAME . DS . 'styles_' . $package . '_*'));
+						foreach ($files as $file) {
+							$styles_min .= file_get_contents($file) . "\n";
+						}
+						$styles_min = CSSMin::minify($styles_min);
+						$cache->save($styles_min, true);
+					}
+					$this->styles[$package] = '<link rel="stylesheet" href="' . DIT_WEB_ROOT . 'cache/' . DIT_SITE_NAME . '/' . $name . '" />' . "\n";
+				}
+			}
+		}
 	}
 }

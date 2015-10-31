@@ -23,8 +23,16 @@ class Registry {
 		}
 	}
 
-	public function set($key,$value){
-		$this->vars[$key] = $value;
+	public function set($key,$value,$mergeArray=false){
+		if($mergeArray==true){
+			if(isset($this->vars[$key]) AND is_array($this->vars[$key]) AND is_array($value)){
+				$this->vars[$key] = array_merge($this->vars[$key],$value);
+			}else{
+				$this->vars[$key] = $value;
+			}
+		}else{
+			$this->vars[$key] = $value;
+		}
 	}
 
 	public function getInGroup($group,$key){
@@ -43,8 +51,16 @@ class Registry {
 		}
 	}
 
-	public function setInGroup($group,$key,$value){
+	public function setInGroup($group,$key,$value,$mergeArray=false){
 		if(!isset($this->vars[$group])) $this->vars[$group] = array();
-		$this->vars[$group][$key] = $value;
+		if($mergeArray==true){
+			if(isset($this->vars[$group][$key]) AND is_array($this->vars[$group][$key]) AND is_array($value)){
+				$this->vars[$group][$key] = array_merge($this->vars[$group][$key],$value);
+			}else{
+				$this->vars[$group][$key] = $value;
+			}
+		}else{
+			$this->vars[$group][$key] = $value;
+		}
 	}
 }
