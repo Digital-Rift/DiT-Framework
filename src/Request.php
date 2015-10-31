@@ -88,7 +88,7 @@ class Request {
 	}
 
 	public function setCookie($key,$value){
-		setcookie($key, $value, time()+COOKIE_LIFE_TIME, "/", $this->data['host']);
+		setcookie($key, $value, time()+DIT_COOKIE_LIFE_TIME, "/", $this->data['host']);
 	}
 
 	public function deleteCookie($key){

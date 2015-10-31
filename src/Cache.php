@@ -17,14 +17,14 @@ class Cache{
 
 	function __construct($file,$site_mode=false){
 		if($site_mode!=false){
-			$cache_dir = APP_DIR.PUBLIC_FOLDER.DS.'cache'.DS;
-			$cache_site_dir = $cache_dir.SITE_NAME.DS;
+			$cache_dir = DIT_PUBLIC_DIR.'cache'.DS;
+			$cache_site_dir = $cache_dir.DIT_SITE_NAME.DS;
 			Files::makeDir($cache_dir);
 			Files::makeDir($cache_site_dir);
 			$this->cache = $cache_site_dir.$file;
 		}else{
-			Files::makeDir(APP_DIR.CACHE_FOLDER.DS);
-			$this->cache = APP_DIR.CACHE_FOLDER.DS.$file.'_'.SITE_NAME;
+			Files::makeDir(DIT_APP_DIR.DIT_CACHE_FOLDER.DS);
+			$this->cache = DIT_APP_DIR.DIT_CACHE_FOLDER.DS.$file.'_'.DIT_SITE_NAME;
 		}
 	}
 
@@ -47,16 +47,16 @@ class Cache{
 				file_put_contents($this->cache, $data);
 			}
 		}else{
-			if(DEV_MODE==false){
+			if(DIT_DEV_MODE==false){
 				file_put_contents($this->cache, serialize($data));
 			}
 		}
 	}
 
 	function clear($clearSiteCache=true){
-		Files::deleteDir(APP_DIR.CACHE_FOLDER.DS, true, array('readme'));
+		Files::deleteDir(DIT_APP_DIR.DIT_CACHE_FOLDER.DS, true, array('readme'));
 		if($clearSiteCache==true){
-			Files::deleteDir(APP_DIR.PUBLIC_FOLDER.DS.'cache'.DS, true, array('readme'));
+			Files::deleteDir(DIT_PUBLIC_DIR.'cache'.DS, true, array('readme'));
 		}
 	}
 }

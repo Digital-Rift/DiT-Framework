@@ -19,6 +19,7 @@ class Dispatcher {
 	protected $controller;
 	protected static $_requestInstance;
 	protected static $_registryInstance;
+	protected static $_sessionInstance;
 
 	public static function requestInstance() {
 		if (null === self::$_requestInstance) {
@@ -34,7 +35,16 @@ class Dispatcher {
 		return self::$_registryInstance;
 	}
 
+	public static function sessionInstance() {
+		if (null === self::$_sessionInstance) {
+			self::$_sessionInstance = new Session();
+		}
+		return self::$_sessionInstance;
+	}
+
 	public function __construct($rules=array()){
+		Dispatcher::sessionInstance();
+
 		$uri = parse_url($_SERVER['REQUEST_URI']);
 		$path = null;
 		if(isset($uri['path'])) $path = urldecode($uri['path']);
@@ -78,11 +88,11 @@ class Dispatcher {
 		$result['controller'] = ucfirst($result['controller']);
 		$result['module'] = ucfirst($result['module']);
 		if(strlen($result['module'])>0){
-			$file = APP_DIR.MODULES_FOLDER.DS.$result['module'].DS.CONTROLLERS_FOLDER.DS.$result['controller'].'Controller.php';
-			$controller = APP_NAMESPACE.'\\'.MODULES_FOLDER.'\\'.$result['module'].'\\'.CONTROLLERS_FOLDER.'\\'.$result['controller'].'Controller';
+			$file = DIT_APP_DIR.DIT_MODULES_FOLDER.DS.$result['module'].DS.DIT_CONTROLLERS_FOLDER.DS.$result['controller'].'Controller.php';
+			$controller = DIT_APP_NAMESPACE.'\\'.DIT_MODULES_FOLDER.'\\'.$result['module'].'\\'.DIT_CONTROLLERS_FOLDER.'\\'.$result['controller'].'Controller';
 		}else{
-			$file = APP_DIR.CONTROLLERS_FOLDER.DS.$result['controller'].'Controller.php';
-			$controller = APP_NAMESPACE.'\\'.CONTROLLERS_FOLDER.'\\'.$result['controller'].'Controller';
+			$file = DIT_APP_DIR.DIT_CONTROLLERS_FOLDER.DS.$result['controller'].'Controller.php';
+			$controller = DIT_APP_NAMESPACE.'\\'.DIT_CONTROLLERS_FOLDER.'\\'.$result['controller'].'Controller';
 		}
 		if(file_exists($file)){
 			$this->controller = new $controller();
