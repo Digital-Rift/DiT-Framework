@@ -2,6 +2,7 @@
   "name": "digitalrift/dit-framework",
   "description": "DiT Framework",
   "license": "MIT",
+  "homepage":"http://dit-cms.org",
   "authors": [
     {
       "name": "Yuriy Seleznev",
@@ -14,7 +15,7 @@
   "require": {
     "php": ">=5.4.0",
     "werkint/jsmin": "1.*",
-    "panique/php-sass": "1.*"
+    "leafo/lessphp": "0.5.*"
   },
   "autoload": {
     "psr-4": {
