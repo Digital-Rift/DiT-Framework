@@ -13,7 +13,8 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "werkint/jsmin": "1.*"
+    "werkint/jsmin": "1.*",
+    "panique/php-sass": "1.*"
   },
   "autoload": {
     "psr-4": {
