@@ -25,6 +25,7 @@ class Router {
 		'symlink'=>null,
 		'rule'=>null,
 		'type'=>null,
+		'accessType'=>null,
 		'options'=>array(),
 	);
 
@@ -98,7 +99,6 @@ class Router {
 			}
 			$cache->save($this->rules);
 		}
-
 	}
 
 	private function findRule(){
@@ -131,6 +131,7 @@ class Router {
 				if(isset($val['redirect'])) $this->result['redirect'] = $val['redirect'];
 				if(isset($val['module'])) $this->result['module'] = $val['module'];
 				if(isset($val['symlink'])) $this->result['symlink'] = $val['symlink'];
+				if(isset($val['accessType'])) $this->result['accessType'] = $val['accessType'];
 				$this->result['rule'] = $key;
 				$this->result['type'] = $val['type'];
 				break;

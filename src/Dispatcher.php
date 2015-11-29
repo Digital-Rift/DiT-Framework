@@ -16,6 +16,9 @@ use DiTFramework\Errors\ErrorHandler;
  */
 class Dispatcher {
 
+	public static $start_time;
+	public static $memory_usage;
+
 	protected $controller;
 	protected static $_requestInstance;
 	protected static $_registryInstance;
@@ -43,6 +46,7 @@ class Dispatcher {
 	}
 
 	public function __construct($rules=array()){
+
 		Dispatcher::sessionInstance();
 
 		$uri = parse_url($_SERVER['REQUEST_URI']);
@@ -95,34 +99,55 @@ class Dispatcher {
 			$controller = DIT_APP_NAMESPACE.'\\'.DIT_CONTROLLERS_FOLDER.'\\'.$result['controller'].'Controller';
 		}
 		if(file_exists($file)){
+			if(count($result['options'])>0){
+				$requestInstance = Dispatcher::requestInstance();
+				$requestInstance->set(array(
+						'query'=>$result['options']
+				));
+			}
 			$this->controller = new $controller();
 			$this->controller->query = $result['options'];
 			$action = $result['action'].'Action';
 			if(method_exists($this->controller,$action)){
 				$this->controller->$action();
-				Header::setStatus($this->controller->status);
-				switch($this->controller->type){
-					case 'json':
-						header('Content-type: application/json; charset=utf-8');
-						$errors = ErrorHandler::jsonErrors();
-						if($errors==false){
-							echo json_encode($this->controller->json);
-						}else{
-							echo json_encode(array(
-								'dit_errors'=>$errors
-							));
-						}
-						break;
-					case 'html':
-						header('Content-type: text/html; charset=utf-8');
-						if($this->controller->view!=null){
-							$view = new View();
-							$view->render($this->controller->view);
-						}
-						ErrorHandler::showErrors();
-						break;
+				$error = false;
+				if(!empty($result['accessType'])){
+					if($this->controller->type != $result['accessType']){
+						$error = true;
+					}
 				}
-				ErrorHandler::logTime();
+				if($error==false) {
+					Header::setStatus($this->controller->status);
+					switch($this->controller->type){
+						case 'json':
+							header('Content-type: application/json; charset=utf-8');
+							$errors = ErrorHandler::jsonErrors();
+							if($errors==false){
+								echo json_encode($this->controller->json);
+							}else{
+								echo json_encode(array(
+									'dit_errors'=>$errors
+								));
+							}
+							break;
+						case 'html':
+							header('Content-type: text/html; charset=utf-8');
+							if($this->controller->view!=null){
+								$view = new View();
+								$view->render($this->controller->view);
+							}
+							ErrorHandler::showErrors();
+							break;
+					}
+					Log::setLog('core_time');
+					$time = round(microtime(true)-self::$start_time, 4);
+					$memory = round((memory_get_usage()-self::$memory_usage)/1024/1024,2);
+					$memory_peak = round(memory_get_peak_usage()/1024/1024,2);
+					$str = date('c').'; Ip: '.$_SERVER['REMOTE_ADDR'].'; Time: '.$time.'; Memory: '.$memory.'Mb; Peak memory: '.$memory_peak.'Mb';
+					Log::addString('core_time',$str);
+				}else{
+					Header::setStatus(404);
+				}
 			}else{
 				Header::setStatus(404);
 			}

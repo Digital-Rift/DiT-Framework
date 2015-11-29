@@ -14,10 +14,25 @@ namespace DiTFramework\Errors;
  */
 class ErrorHandler {
 
-	public static $start_time;
-	public static $memory_usage;
-
 	public static $log = array();
+
+	public static function init(){
+		ini_set('display_errors', 0);
+		error_reporting(E_ALL | E_STRICT);
+		set_error_handler(array('DiTFramework\Errors\ErrorHandler', 'errorsLog'));
+		register_shutdown_function(array('DiTFramework\Errors\ErrorHandler', 'fatalErrors'));
+	}
+
+	public static function errorsLog($type, $message, $file, $line){
+		self::$log['Errors'][] = array(
+			'type'=>$type,
+			'message'=>$message,
+			'file'=>$file,
+			'line'=>$line
+		);
+		return false;
+	}
+
 
 	public static function fatalErrors(){
 		$error = error_get_last();
@@ -34,16 +49,6 @@ class ErrorHandler {
 	public static function showErrors(){
 		if(!empty(ErrorHandler::$log['Errors']) AND DIT_DEV_MODE==true){
 			require(DIT_FRAMEWORK_DIR.'Errors'.DS.'errors.phtml');
-		}
-	}
-
-	public static function logTime(){
-		if(DIT_SAVE_LOGS){
-			$file = DIT_APP_DIR.DIT_LOGS_FOLDER.DS.'core_time_'.DIT_SITE_NAME.'.log';
-			$time = round(microtime(true)-ErrorHandler::$start_time, 4);
-			$memory = round((memory_get_usage()-ErrorHandler::$memory_usage)/1024/1024,2);
-			$memory_peak = round(memory_get_peak_usage()/1024/1024,2);
-			file_put_contents($file,date('c').'; Ip: '.$_SERVER['REMOTE_ADDR'].'; Time: '.$time.'; Memory: '.$memory.'Mb; Peak memory: '.$memory_peak.'Mb'."\n",FILE_APPEND);
 		}
 	}
 

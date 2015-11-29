@@ -18,4 +18,20 @@ class Controller extends Assist{
 	public $json;
 	public $status=200;
 	public $type='html';
+
+	public function getQuery($key){
+		if(isset($this->query[$key])){
+			return $this->query[$key];
+		}else{
+			return false;
+		}
+	}
+
+	public function existQuery($key){
+		if(isset($this->query[$key])){
+			return true;
+		}else{
+			return false;
+		}
+	}
 }

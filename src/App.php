@@ -16,6 +16,7 @@ use DiTFramework\Errors\ErrorHandler;
 class App {
 	private $rules = array();
 	private $devMode = false;
+	private $devTriggerHost = null;
 	private $webRoot = '/';
 	private $siteName = 'default';
 	private $saveLogs = false;
@@ -30,8 +31,30 @@ class App {
 	private $viewsFolder = 'views';
 	private $logsFolder = 'logs';
 
+	private $dbDriver = 'mysql';
+	private $dbName = 'dit-framework';
+	private $dbHost = 'localhost';
+	private $dbUser = 'root';
+	private $dbPassword = 'password';
+	private $dbTablePrefix = 'dit_';
+	private $dbCharset = 'utf8';
+
+	public function setDbConfig($driver,$db_name,$host,$user,$password,$table_prefix=null,$charset='utf8'){
+		$this->dbDriver = $driver;
+		$this->dbName = $db_name;
+		$this->dbHost = $host;
+		$this->dbUser = $user;
+		$this->dbPassword = $password;
+		$this->dbTablePrefix = $table_prefix;
+		$this->dbCharset = $charset;
+	}
+
 	public function isDevMode(){
 		$this->devMode = true;
+	}
+
+	public function devTriggerHost($host){
+		$this->devTriggerHost = $host;
 	}
 
 	public function setWebRoot($value){
@@ -82,19 +105,26 @@ class App {
 		$this->logsFolder = $folder;
 	}
 
-	public function includeSaveLogs(){
+	public function saveLogs(){
 		$this->saveLogs = true;
 	}
 
 	public function init($namespace){
-		ErrorHandler::$memory_usage = memory_get_usage();
-		ErrorHandler::$start_time = microtime(true);
+		ErrorHandler::init();
+
+		Dispatcher::$memory_usage = memory_get_usage();
+		Dispatcher::$start_time = microtime(true);
 
 		if(!defined('DS')) define('DS', DIRECTORY_SEPARATOR);
 
 		if(empty($this->frameworkDir)) $this->frameworkDir = __DIR__.DS;
 		if(empty($this->appDir)) trigger_error(i18n::t('Variable "appDir" is not assigned. Use method setAppDir($dir)'),E_USER_WARNING);
 		if(empty($this->publicDir)) $this->publicDir = $this->appDir.'public'.DS;
+		if(!empty($this->devTriggerHost)) {
+			if($_SERVER['HTTP_HOST']==$this->devTriggerHost OR $_SERVER['HTTP_HOST']=='www.'.$this->devTriggerHost){
+				$this->devMode = true;
+			}
+		}
 
 		define('DIT_APP_NAMESPACE', $namespace);
 		define('DIT_DEV_MODE', $this->devMode);
@@ -112,6 +142,14 @@ class App {
 		define('DIT_VIEWS_FOLDER', $this->viewsFolder);
 		define('DIT_LOGS_FOLDER', $this->logsFolder);
 
+		define('DIT_DB_DRIVER', $this->dbDriver);
+		define('DIT_DB_NAME', $this->dbName);
+		define('DIT_DB_HOST', $this->dbHost);
+		define('DIT_DB_USER', $this->dbUser);
+		define('DIT_DB_PASSWORD', $this->dbPassword);
+		define('DIT_DB_TABLE_PREFIX', $this->dbTablePrefix);
+		define('DIT_DB_CHARSET', $this->dbCharset);
+
 		if(DIT_DEV_MODE==true){
 			$cache = new Cache('System');
 			$cache->clear(false);
@@ -120,6 +158,7 @@ class App {
 
 	public function start(){
 		new Dispatcher($this->rules);
+		Log::save();
 	}
 
 	public function rule($rule,$options=array()){

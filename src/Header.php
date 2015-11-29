@@ -65,9 +65,9 @@ class Header {
 		}
 	}
 
-	public static function redirect($link=null){
+	public static function redirect($link){
 		if(!empty($link)){
-			header('Location: '.DIT_WEB_ROOT.$link);
+			header('Location: '.$link);
 			die();
 		}
 	}

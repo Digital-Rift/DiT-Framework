@@ -43,6 +43,22 @@ class View extends Assist{
 		return $this->meta;
 	}
 
+	public function getScriptsVars(){
+		$vars = $this->registry->get('DiT-ScriptsVar');
+		$out = '<script>var DIT_WEB_ROOT = \''.DIT_WEB_ROOT.'\';';
+		if(is_array($vars)){
+			foreach($vars as $k=>$v){
+				if(is_array($v)){
+					$out .= 'var '.$k.' = '.json_encode($v).';';
+				}else{
+					$out .= 'var '.$k.' = \''.$v.'\';';
+				}
+			}
+		}
+		$out .= '</script>';
+		return $out;
+	}
+
 	public function getScripts(){
 		if(count($this->scripts)>0){
 			$out = null;
@@ -100,6 +116,20 @@ class View extends Assist{
 				extract((array)$this->vars);
 			}
 			require $file;
+		}
+	}
+
+	public function existTemplate($key){
+		$template = $this->registry->getInGroup('DiT-Templates',$key);
+		if($template!=false){
+			$file = DIT_APP_DIR.DIT_VIEWS_FOLDER.DS.$template.$this->ext;
+			if(file_exists($file)){
+				return true;
+			}else{
+				return false;
+			}
+		}else{
+			return false;
 		}
 	}
 
@@ -163,6 +193,39 @@ class View extends Assist{
 						$cache->save($styles_min, true);
 					}
 					$this->styles[$package] = '<link rel="stylesheet" href="' . DIT_WEB_ROOT . 'cache/' . DIT_SITE_NAME . '/' . $name . '" />' . "\n";
+				}
+			}
+		}
+
+		$lessFiles = $this->registry->getGroup('DiT-LessFiles');
+		$lessCreated = $this->registry->getGroup('DiT-LessCreated');
+		if(is_array($lessFiles)) {
+			foreach ($lessFiles as $package => $files) {
+				if (isset($lessCreated[$package])) {
+					$less_hash = md5(serialize($lessCreated[$package]));
+					$name = 'less_' . $package . '_' . $less_hash . '.css';
+					$cache = new Cache($name, true);
+					if (!$cache->exist()) {
+						$less_min = null;
+						array_map("unlink", glob(DIT_PUBLIC_DIR . 'cache' . DS . DIT_SITE_NAME . DS . 'less_' . $package . '_*'));
+						foreach ($files as $file) {
+							$less_min .= file_get_contents($file) . "\n";
+						}
+						$less = new \lessc();
+						try {
+							$dit_less = '@DIT_WEB_ROOT: "'.DIT_WEB_ROOT.'";'."\n";
+							$less_min = $less->compile($dit_less.$less_min);
+						} catch (\Exception $e) {
+							trigger_error('Less error: '. $e->getMessage());
+						}
+						$less_min = CSSMin::minify($less_min);
+						$cache->save($less_min, true);
+					}
+					if(isset($this->styles[$package])){
+						$this->styles[$package] .= '<link rel="stylesheet" href="' . DIT_WEB_ROOT . 'cache/' . DIT_SITE_NAME . '/' . $name . '" />' . "\n";
+					}else{
+						$this->styles[$package] = '<link rel="stylesheet" href="' . DIT_WEB_ROOT . 'cache/' . DIT_SITE_NAME . '/' . $name . '" />' . "\n";
+					}
 				}
 			}
 		}

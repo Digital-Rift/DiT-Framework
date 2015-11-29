@@ -32,8 +32,12 @@ class Assist{
 		$this->registry->setInGroup('DiT-Templates',$key,$value);
 	}
 
-	public function redirect($link=null){
+	public function redirect($link){
 		Header::redirect($link);
+	}
+
+	public function redirectToHome(){
+		Header::redirect(DIT_WEB_ROOT);
 	}
 
 	public function reload(){
@@ -56,24 +60,29 @@ class Assist{
 		$this->registry->setInGroup('DiT-Meta','keywords',$value);
 	}
 
-	public function setLoadPackageScripts($array){
+	public function setLoadPackageScripts($array,$merge=true){
 		if(is_array($array)){
-			$this->registry->set('DiT-ScriptsLoadPackages',$array,true);
+			$this->registry->set('DiT-ScriptsLoadPackages',$array,$merge);
 		}
 	}
 
-	public function setLoadPackageStyles($array){
+	public function setLoadPackageStyles($array,$merge=true){
 		if(is_array($array)){
-			$this->registry->set('DiT-StylesLoadPackages',$array,true);
+			$this->registry->set('DiT-StylesLoadPackages',$array,$merge);
 		}
 	}
 
-	public function setScripts($array,$package='public'){
+	public function setScriptsVar($key, $value, $merge=false){
+		$this->registry->setInGroup('DiT-ScriptsVar',$key,$value,$merge);
+	}
+
+	public function setScripts($array,$package='public',$dir=null){
 		if(is_array($array)){
+			if(empty($dir)) $dir = DIT_APP_DIR;
 			$files = array();
 			$created = array();
 			foreach($array as $v){
-				$file = DIT_APP_DIR.$v;
+				$file = $dir.$v;
 				if (file_exists($file)){
 					$files[] = $file;
 					$created[] = filemtime($file);
@@ -84,12 +93,13 @@ class Assist{
 		}
 	}
 
-	public function setStyles($array,$package='public'){
+	public function setStyles($array,$package='public',$dir=null){
 		if(is_array($array)){
+			if(empty($dir)) $dir = DIT_APP_DIR;
 			$files = array();
 			$created = array();
 			foreach($array as $v){
-				$file = DIT_APP_DIR.$v;
+				$file = $dir.$v;
 				if (file_exists($file)){
 					$files[] = $file;
 					$created[] = filemtime($file);
@@ -97,6 +107,23 @@ class Assist{
 			}
 			$this->registry->setInGroup('DiT-StylesFiles',$package,$files,true);
 			$this->registry->setInGroup('DiT-StylesCreated',$package,$created,true);
+		}
+	}
+
+	public function setLess($array,$package='public',$dir=null){
+		if(is_array($array)){
+			if(empty($dir)) $dir = DIT_APP_DIR;
+			$files = array();
+			$created = array();
+			foreach($array as $v){
+				$file = $dir.$v;
+				if (file_exists($file)){
+					$files[] = $file;
+					$created[] = filemtime($file);
+				}
+			}
+			$this->registry->setInGroup('DiT-LessFiles',$package,$files,true);
+			$this->registry->setInGroup('DiT-LessCreated',$package,$created,true);
 		}
 	}
 }

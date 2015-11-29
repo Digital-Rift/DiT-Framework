@@ -20,6 +20,10 @@ class Session {
 		$this->id = session_id();
 	}
 
+	public function set($key,$value){
+		$_SESSION[$key] = $value;
+	}
+
 	public function get($key,$value=null){
 		if(!empty($value)){
 			if(isset($_SESSION[$key][$value])){
