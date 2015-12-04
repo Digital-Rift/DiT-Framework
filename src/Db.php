@@ -243,6 +243,31 @@ class Db{
 		}
 	}
 
+	public function multiInsert($values=array()){
+		$count = count($values);
+		if($count>0){
+			$aKeys = array_keys($values[0]);
+			$query = "INSERT INTO ".$this->table." (".implode(',',$aKeys).") VALUES ";
+			$i=1;
+			foreach($values as $value){
+				$newValues = array_combine(preg_replace('/^/',':'.$i,$aKeys,1),$value);
+				$query .= "(".implode(',',array_keys($newValues)).")";
+				$this->setData($newValues);
+				if($count!=$i) $query .= ",";
+				$i++;
+			}
+			$this->first = $query;
+			$this->fastQuery();
+			if($this->executeResult!=false){
+				return true;
+			}else{
+				return false;
+			}
+		}else{
+			return false;
+		}
+	}
+
 	public function update($values=array()){
 		if(count($values)>0){
 			$aKeys = array_keys($values);
