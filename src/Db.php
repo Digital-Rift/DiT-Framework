@@ -120,7 +120,7 @@ class Db{
 			if(is_array($value)){
 				$aKeys = array_keys($value);
 				$newValues = array_combine(preg_replace('/^/',':where_in_'.self::$whereKeyIndex.'_',$aKeys,1),$value);
-				$where = $key.' IN ('.implode(',',array_keys($newValues)).')';
+				$where = $key.' IN('.implode(',',array_keys($newValues)).')';
 				$this->setData($newValues);
 				self::$whereKeyIndex = self::$whereKeyIndex+1;
 			}
@@ -214,14 +214,14 @@ class Db{
 		return $this;
 	}
 
-	public function getAll(){
-		$this->first = 'SELECT * FROM '.$this->table;
+	public function getAll($columns='*'){
+		$this->first = 'SELECT '.$columns.' FROM '.$this->table;
 		$result = $this->fastQuery();
 		return $result->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	public function get(){
-		$this->first = 'SELECT * FROM '.$this->table;
+	public function get($columns='*'){
+		$this->first = 'SELECT '.$columns.' FROM '.$this->table;
 		$result = $this->fastQuery();
 		return $result->fetch(PDO::FETCH_ASSOC);
 	}
