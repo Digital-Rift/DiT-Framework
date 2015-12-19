@@ -66,6 +66,9 @@ class Router {
 						$val_key = $val;
 						if(count($val_array)>1){
 							switch($val_array[1]){
+								case 'all':
+									$cfg = '(.*)';
+									break;
 								case 'optional':
 									$cfg = '([а-яa-z0-9\-\_\./]+)?';
 									break;
@@ -82,7 +85,7 @@ class Router {
 							$val_key = $val_array[0];
 						}
 						if(isset($v['symlink'])){
-							$cfg = '([а-яa-z0-9\-\_\./]+)';
+							$cfg = '(.*)';
 						}
 						$this->rules[$k]['options'][$val_key] = array();
 						$pattern = preg_replace("/<(?<key>[".$val."]+)>/",$cfg, $pattern);

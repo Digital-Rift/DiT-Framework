@@ -117,10 +117,18 @@ class Db{
 	protected function genWhere($cond,$key,$value){
 		$where = null;
 		if(strtoupper($cond)=='IN') {
-			if(is_array($value)){
+			if(is_array($value) AND count($value)>0){
 				$aKeys = array_keys($value);
 				$newValues = array_combine(preg_replace('/^/',':where_in_'.self::$whereKeyIndex.'_',$aKeys,1),$value);
 				$where = $key.' IN('.implode(',',array_keys($newValues)).')';
+				$this->setData($newValues);
+				self::$whereKeyIndex = self::$whereKeyIndex+1;
+			}
+		}elseif(strtoupper($cond)=='BETWEEN'){
+			if(is_array($value) AND count($value)>0){
+				$aKeys = array_keys($value);
+				$newValues = array_combine(preg_replace('/^/',':where_bw_'.self::$whereKeyIndex.'_',$aKeys,1),$value);
+				$where = '('.$key.' BETWEEN '.implode(' AND ',array_keys($newValues)).')';
 				$this->setData($newValues);
 				self::$whereKeyIndex = self::$whereKeyIndex+1;
 			}

@@ -240,6 +240,7 @@ class Files{
 	}
 
 	public static function findType($ext){
+		$ext = strtolower($ext);
 		if(isset(self::$mimeTypes[$ext])){
 			return self::$mimeTypes[$ext];
 		}else{

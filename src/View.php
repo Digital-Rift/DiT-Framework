@@ -45,7 +45,12 @@ class View extends Assist{
 
 	public function getScriptsVars(){
 		$vars = $this->registry->get('DiT-ScriptsVar');
-		$out = '<script>var DIT_WEB_ROOT = \''.DIT_WEB_ROOT.'\';';
+		if(DIT_DEV_MODE){
+			$dev_mode = 'true';
+		}else{
+			$dev_mode = 'false';
+		}
+		$out = '<script>var DIT_WEB_ROOT = \''.DIT_WEB_ROOT.'\';var DIT_DEV_MODE = '.$dev_mode.';';
 		if(is_array($vars)){
 			foreach($vars as $k=>$v){
 				if(is_array($v)){
