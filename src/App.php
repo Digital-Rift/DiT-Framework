@@ -16,28 +16,6 @@ use DiTFramework\Errors\ErrorHandler;
 class App {
 	private $rules = array();
 	private $devMode = false;
-	private $devTriggerHost = null;
-	private $webRoot = '/';
-	private $siteName = 'default';
-	private $saveLogs = false;
-	private $cookieLifeTime = 3600;
-	private $appDir = null;
-	private $frameworkDir = null;
-	private $publicDir = null;
-	private $cacheFolder = 'cache';
-	private $modulesFolder = 'modules';
-	private $controllersFolder = 'controllers';
-	private $modelsFolder = 'models';
-	private $viewsFolder = 'views';
-	private $logsFolder = 'logs';
-
-	private $dbDriver = 'mysql';
-	private $dbName = 'dit-framework';
-	private $dbHost = 'localhost';
-	private $dbUser = 'root';
-	private $dbPassword = 'password';
-	private $dbTablePrefix = 'dit_';
-	private $dbCharset = 'utf8';
 
 	public function setDbConfig($driver,$db_name,$host,$user,$password,$table_prefix=null,$charset='utf8'){
 		$this->dbDriver = $driver;
