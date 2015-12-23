@@ -5,9 +5,10 @@
  * @author Yuriy Seleznev <sendelius@gmail.com>
  * @author Alex Kalantaryan <alex_phant0m@mail.ru>
  * @license MIT https://opensource.org/licenses/MIT
- * @var $error
  */
 use DiTFramework\i18n;
+use DiTFramework\Errors\ErrorHandler;
+//TODO: стилизовать шаблон критических ошибок
 ?>
 <!DOCTYPE html>
 <html>
@@ -19,8 +20,8 @@ use DiTFramework\i18n;
 <body>
 <div id="DiT-Fatal-Error">
 	<p>
-		<span><b><?=i18n::t('Fatal error')?>: </b><?=$error['message']?></span><br/>
-		<span class="hint"><?=i18n::t('File')?>: <?=$error['file']?> (<?=$error['line']?>)</span>
+		<span><b><?=i18n::t('Fatal error')?>: </b><?=ErrorHandler::$fatal_error['message']?></span><br/>
+		<span class="hint"><?=i18n::t('File')?>: <?=ErrorHandler::$fatal_error['file']?> (<?=ErrorHandler::$fatal_error['line']?>)</span>
 	</p>
 </div>
 </body>

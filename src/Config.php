@@ -72,7 +72,7 @@ class Config{
 		self::$dev_cfg[$key] = $value;
 	}
 
-	function get(){
+	public static function get($key){
 
 	}
 }

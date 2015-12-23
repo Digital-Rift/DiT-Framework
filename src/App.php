@@ -16,6 +16,7 @@ use DiTFramework\Errors\ErrorHandler;
 class App {
 	private $rules = array();
 	private $devMode = false;
+	private $devTriggerHost = null;
 
 	public function setDbConfig($driver,$db_name,$host,$user,$password,$table_prefix=null,$charset='utf8'){
 		$this->dbDriver = $driver;
@@ -140,13 +141,15 @@ class App {
 	}
 
 	public function rule($rule,$options=array()){
+		if($rule=='/') $rule = '';
 		$this->rules[DIT_WEB_ROOT.$rule] = $options;
 	}
 
 	public function rules($rules=array()){
 		$outRules = array();
-		foreach($rules as $k=>$rule){
-			$outRules[DIT_WEB_ROOT.$k] = $rule;
+		foreach($rules as $rule=>$options){
+			if($rule=='/') $rule = '';
+			$outRules[DIT_WEB_ROOT.$rule] = $options;
 		}
 		$this->rules = array_merge($this->rules,$outRules);
 	}
