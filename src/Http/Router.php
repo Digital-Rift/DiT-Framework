@@ -6,11 +6,11 @@
  * @author Alex Kalantaryan <alex_phant0m@mail.ru>
  * @license MIT https://opensource.org/licenses/MIT
  */
-namespace DiTFramework;
+namespace DiTFramework\Http;
 
 /**
  * Class Router
- * @package DiTFramework
+ * @package DiTFramework\Http
  */
 class Router {
 

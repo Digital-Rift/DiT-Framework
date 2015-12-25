@@ -6,11 +6,11 @@
  * @author Alex Kalantaryan <alex_phant0m@mail.ru>
  * @license MIT https://opensource.org/licenses/MIT
  */
-namespace DiTFramework;
+namespace DiTFramework\Http;
 
 /**
  * Class Request
- * @package DiTFramework
+ * @package DiTFramework\Http
  */
 class Request {
 	protected $data = array(
@@ -23,8 +23,21 @@ class Request {
 		'query'=>null
 	);
 
-	public function set($data = array()){
-		$this->data = array_merge($this->data,$data);
+	public function __construct(){
+		if(is_array($_SERVER)){
+			$uri = parse_url($_SERVER['REQUEST_URI']);
+			$path = null;
+			if(isset($uri['path'])) $path = urldecode($uri['path']);
+			$this->data = array(
+				'method'=>$_SERVER['REQUEST_METHOD'],
+				'request_uri'=>$_SERVER['REQUEST_URI'],
+				'url'=>$path,
+				'server_ip'=>$_SERVER['SERVER_ADDR'],
+				'user_ip'=>$_SERVER['REMOTE_ADDR'],
+				'host'=>$_SERVER['SERVER_NAME'],
+				'query'=>$_REQUEST
+			);
+		}
 	}
 
 	public function getMethod(){

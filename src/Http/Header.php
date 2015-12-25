@@ -6,13 +6,30 @@
  * @author Alex Kalantaryan <alex_phant0m@mail.ru>
  * @license MIT https://opensource.org/licenses/MIT
  */
-namespace DiTFramework;
+namespace DiTFramework\Http;
 
 /**
  * Class Header
- * @package DiTFramework
+ * @package DiTFramework\Http
  */
 class Header {
+	public static function setStatus($status){
+		if(isset(self::$codes[$status])){
+			header("Status: ".$status." ".self::$codes[$status]);
+			header("HTTP/1.0 ".$status." ".self::$codes[$status]);
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	public static function redirect($link){
+		if(!empty($link)){
+			header('Location: '.$link);
+			die();
+		}
+	}
+
 	public static $codes = array(
 		100 => 'Continue',
 		101 => 'Switching Protocols',
@@ -54,21 +71,4 @@ class Header {
 		503 => 'Service Unavailable',
 		504 => 'Gateway Time-out'
 	);
-
-	public static function setStatus($status){
-		if(isset(self::$codes[$status])){
-			header("Status: ".$status." ".self::$codes[$status]);
-			header("HTTP/1.0 ".$status." ".self::$codes[$status]);
-			return true;
-		}else{
-			return false;
-		}
-	}
-
-	public static function redirect($link){
-		if(!empty($link)){
-			header('Location: '.$link);
-			die();
-		}
-	}
 }

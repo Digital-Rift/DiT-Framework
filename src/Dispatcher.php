@@ -9,6 +9,8 @@
 namespace DiTFramework;
 
 use DiTFramework\Errors\ErrorHandler;
+use DiTFramework\Http\Request;
+use DiTFramework\Http\Router;
 
 /**
  * Class Dispatcher
@@ -23,6 +25,7 @@ class Dispatcher {
 	protected static $_requestInstance;
 	protected static $_registryInstance;
 	protected static $_sessionInstance;
+	protected static $_configInstance;
 
 	public static function requestInstance() {
 		if (null === self::$_requestInstance) {
@@ -45,26 +48,17 @@ class Dispatcher {
 		return self::$_sessionInstance;
 	}
 
+	public static function configInstance() {
+		if (null === self::$_configInstance) {
+			self::$_configInstance = new Config();
+		}
+		return self::$_configInstance;
+	}
+
 	public function __construct($rules=array()){
 
 		Dispatcher::sessionInstance();
-
-		$uri = parse_url($_SERVER['REQUEST_URI']);
-		$path = null;
-		if(isset($uri['path'])) $path = urldecode($uri['path']);
-		$request = array(
-			'method'=>$_SERVER['REQUEST_METHOD'],
-			'request_uri'=>$_SERVER['REQUEST_URI'],
-			'url'=>$path,
-			'server_ip'=>$_SERVER['SERVER_ADDR'],
-			'user_ip'=>$_SERVER['REMOTE_ADDR'],
-			'host'=>$_SERVER['SERVER_NAME'],
-			'query'=>$_REQUEST
-		);
-
-		$requestInstance = Dispatcher::requestInstance();
-		$requestInstance->set($request);
-
+		Dispatcher::requestInstance();
 		Dispatcher::registryInstance();
 
 		$router = new Router();

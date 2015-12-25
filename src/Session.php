@@ -40,6 +40,10 @@ class Session {
 		}
 	}
 
+	public function getAll(){
+		return $_SESSION;
+	}
+
 	public function exist($key,$value=null){
 		if(!empty($value)){
 			if(isset($_SESSION[$key][$value])){

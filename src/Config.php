@@ -13,7 +13,7 @@ namespace DiTFramework;
  * @package DiTFramework
  */
 class Config{
-	private $systemCfgDefault = array(
+	private $cfg_default = array(
 		'webRoot'=>'/',
 		'siteName'=>'default',
 		'saveLogs'=>false,
@@ -39,20 +39,21 @@ class Config{
 		'dbCharset'=>'utf8',
 	);
 
-	private static $cfg = array(
+	private $cfg = array(
 		'public'=>array(),
 		'dev'=>array(),
 	);
 
 	function __construct(){
-
+		$this->cfg['public'] = $this->cfg_default;
+		$this->cfg['dev'] = $this->cfg_default;
 	}
 
-	public static function set($key,$value){
+	public function set($key,$value){
 		self::$cfg[$key] = $value;
 	}
 
-	public static function get($key){
+	public function get($key){
 		if(DIT_DEV_MODE){
 			if(isset(self::$cfg[$key])){
 				return self::$cfg[$key];

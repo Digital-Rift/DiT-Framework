@@ -16,11 +16,13 @@ class Assist{
 	public $request;
 	public $registry;
 	public $session;
+	public $config;
 
 	public function __construct(){
 		$this->request = Dispatcher::requestInstance();
 		$this->registry = Dispatcher::registryInstance();
 		$this->session = Dispatcher::sessionInstance();
+		$this->config = Dispatcher::configInstance();
 	}
 
 	public function assign($key,$value){

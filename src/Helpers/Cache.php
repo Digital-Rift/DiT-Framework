@@ -59,4 +59,9 @@ class Cache{
 			Files::deleteDir(DIT_PUBLIC_DIR.'cache'.DS, true, array('readme'));
 		}
 	}
+
+	function clearAll(){
+		Files::deleteDir(DIT_APP_DIR.DIT_CACHE_FOLDER.DS, true, array('readme'));
+		Files::deleteDir(DIT_PUBLIC_DIR.'cache'.DS, true, array('readme'));
+	}
 }
