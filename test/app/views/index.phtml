@@ -1,0 +1,23 @@
+<?php
+/**
+ * @var DiTFramework\View $this
+ */
+?>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+
+	<?=$this->getMeta()?>
+	<?=$this->getStyles()?>
+
+</head>
+<body>
+
+<?php $this->getTemplate('main') ?>
+
+<?=$this->getScriptsVars()?>
+
+<?=$this->getScripts()?>
+
+</body>
+</html>

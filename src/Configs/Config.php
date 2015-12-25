@@ -13,66 +13,58 @@ namespace DiTFramework;
  * @package DiTFramework
  */
 class Config{
+	private $systemCfgDefault = array(
+		'webRoot'=>'/',
+		'siteName'=>'default',
+		'saveLogs'=>false,
+		'cookieLifeTime'=>3600,
+
+		'appDir'=>null,
+		'frameworkDir'=>null,
+		'publicDir'=>null,
+
+		'cacheFolder'=>'cache',
+		'modulesFolder'=>'modules',
+		'controllersFolder'=>'controllers',
+		'modelsFolder'=>'models',
+		'viewsFolder'=>'views',
+		'logsFolder'=>'logs',
+
+		'dbDriver'=>'mysql',
+		'dbName'=>'dit-framework',
+		'dbHost'=>'localhost',
+		'dbUser'=>'root',
+		'dbPassword'=>'password',
+		'dbTablePrefix'=>'dit_',
+		'dbCharset'=>'utf8',
+	);
+
 	private static $cfg = array(
-		'webRoot'=>'/',
-		'siteName'=>'default',
-		'saveLogs'=>false,
-		'cookieLifeTime'=>3600,
-
-		'appDir'=>null,
-		'frameworkDir'=>null,
-		'publicDir'=>null,
-
-		'cacheFolder'=>'cache',
-		'modulesFolder'=>'modules',
-		'controllersFolder'=>'controllers',
-		'modelsFolder'=>'models',
-		'viewsFolder'=>'views',
-		'logsFolder'=>'logs',
-
-		'dbDriver'=>'mysql',
-		'dbName'=>'dit-framework',
-		'dbHost'=>'localhost',
-		'dbUser'=>'root',
-		'dbPassword'=>'password',
-		'dbTablePrefix'=>'dit_',
-		'dbCharset'=>'utf8',
+		'public'=>array(),
+		'dev'=>array(),
 	);
-	private static $dev_cfg = array(
-		'webRoot'=>'/',
-		'siteName'=>'default',
-		'saveLogs'=>false,
-		'cookieLifeTime'=>3600,
 
-		'appDir'=>null,
-		'frameworkDir'=>null,
-		'publicDir'=>null,
+	function __construct(){
 
-		'cacheFolder'=>'cache',
-		'modulesFolder'=>'modules',
-		'controllersFolder'=>'controllers',
-		'modelsFolder'=>'models',
-		'viewsFolder'=>'views',
-		'logsFolder'=>'logs',
-
-		'dbDriver'=>'mysql',
-		'dbName'=>'dit-framework',
-		'dbHost'=>'localhost',
-		'dbUser'=>'root',
-		'dbPassword'=>'password',
-		'dbTablePrefix'=>'dit_',
-		'dbCharset'=>'utf8',
-	);
+	}
 
 	public static function set($key,$value){
 		self::$cfg[$key] = $value;
 	}
 
-	public static function setDev($key,$value){
-		self::$dev_cfg[$key] = $value;
-	}
-
 	public static function get($key){
-
+		if(DIT_DEV_MODE){
+			if(isset(self::$cfg[$key])){
+				return self::$cfg[$key];
+			}else{
+				return false;
+			}
+		}else{
+			if(isset(self::$dev_cfg[$key])){
+				return self::$dev_cfg[$key];
+			}else{
+				return false;
+			}
+		}
 	}
 }

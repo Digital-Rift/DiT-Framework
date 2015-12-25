@@ -7,7 +7,6 @@
  * @license MIT https://opensource.org/licenses/MIT
  */
 namespace DiTFramework;
-use DiTFramework\Errors\ErrorHandler;
 
 /**
  * Class App
@@ -18,16 +17,6 @@ class App {
 	private $devMode = false;
 	private $devTriggerHost = null;
 
-	public function setDbConfig($driver,$db_name,$host,$user,$password,$table_prefix=null,$charset='utf8'){
-		$this->dbDriver = $driver;
-		$this->dbName = $db_name;
-		$this->dbHost = $host;
-		$this->dbUser = $user;
-		$this->dbPassword = $password;
-		$this->dbTablePrefix = $table_prefix;
-		$this->dbCharset = $charset;
-	}
-
 	public function isDevMode(){
 		$this->devMode = true;
 	}
@@ -37,7 +26,17 @@ class App {
 	}
 
 	public function setWebRoot($value){
-		$this->webRoot = $value;
+
+	}
+
+	public function setDbConfig($driver,$db_name,$host,$user,$password,$table_prefix=null,$charset='utf8'){
+		$this->dbDriver = $driver;
+		$this->dbName = $db_name;
+		$this->dbHost = $host;
+		$this->dbUser = $user;
+		$this->dbPassword = $password;
+		$this->dbTablePrefix = $table_prefix;
+		$this->dbCharset = $charset;
 	}
 
 	public function setSiteName($value){
@@ -89,25 +88,25 @@ class App {
 	}
 
 	public function init($namespace){
-		ErrorHandler::init();
-
 		Dispatcher::$memory_usage = memory_get_usage();
 		Dispatcher::$start_time = microtime(true);
 
 		if(!defined('DS')) define('DS', DIRECTORY_SEPARATOR);
-
-		if(empty($this->frameworkDir)) $this->frameworkDir = __DIR__.DS;
-		if(empty($this->appDir)) trigger_error(i18n::t('Variable "appDir" is not assigned. Use method setAppDir($dir)'),E_USER_WARNING);
-		if(empty($this->publicDir)) $this->publicDir = $this->appDir.'public'.DS;
 		if(!empty($this->devTriggerHost)) {
 			if($_SERVER['HTTP_HOST']==$this->devTriggerHost OR $_SERVER['HTTP_HOST']=='www.'.$this->devTriggerHost){
 				$this->devMode = true;
 			}
 		}
-
-		define('DIT_APP_NAMESPACE', $namespace);
 		define('DIT_DEV_MODE', $this->devMode);
-		define('DIT_WEB_ROOT', $this->webRoot);
+		define('DIT_APP_NAMESPACE', $namespace);
+		define('DIT_WEB_ROOT', Config::get('webRoot'));
+
+
+		if(empty($this->frameworkDir)) $this->frameworkDir = __DIR__.DS;
+		if(empty($this->appDir)) trigger_error(i18n::t('Variable "appDir" is not assigned. Use method setAppDir($dir)'),E_USER_WARNING);
+		if(empty($this->publicDir)) $this->publicDir = $this->appDir.'public'.DS;
+
+
 		define('DIT_SITE_NAME', $this->siteName);
 		define('DIT_SAVE_LOGS', $this->saveLogs);
 		define('DIT_COOKIE_LIFE_TIME', $this->cookieLifeTime);
