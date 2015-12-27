@@ -213,10 +213,16 @@ class Db{
 
 	public function fullTextSearch($columns=array(),$search){
 		if(count($columns)>0){
+			$q = array();
+			foreach($columns as $c){
+				$r = explode(' ', trim($search));
+				$r = implode('|', $r);
+				$q[] = '('.$c.' REGEXP \''.$r.'\')';
+			}
 			if($this->where!=null){
-				$this->where .= ' AND '.$this->genWhere('MATCH',$columns,$search);
+				$this->where .= ' AND '.$this->genWhere('CQUERY','('.implode(' OR ',$q).')',null);
 			}else{
-				$this->where = 'WHERE '.$this->genWhere('MATCH',$columns,$search);
+				$this->where = 'WHERE '.$this->genWhere('CQUERY','('.implode(' OR ',$q).')',null);
 			}
 		}
 		return $this;
