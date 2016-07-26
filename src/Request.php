@@ -20,11 +20,15 @@ class Request {
 		'server_ip'=>null,
 		'user_ip'=>null,
 		'host'=>null,
-		'query'=>null
+		'query'=>array()
 	);
 
 	public function set($data = array()){
 		$this->data = array_merge($this->data,$data);
+	}
+
+	public function setQuery($data = array()){
+		$this->data['query'] = array_merge($this->data['query'],$data);
 	}
 
 	public function getMethod(){

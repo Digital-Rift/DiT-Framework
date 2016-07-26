@@ -101,9 +101,7 @@ class Dispatcher {
 		if(file_exists($file)){
 			if(count($result['options'])>0){
 				$requestInstance = Dispatcher::requestInstance();
-				$requestInstance->set(array(
-						'query'=>$result['options']
-				));
+				$requestInstance->setQuery($result['options']);
 			}
 			$this->controller = new $controller();
 			$this->controller->query = $result['options'];
@@ -124,6 +122,25 @@ class Dispatcher {
 							$errors = ErrorHandler::jsonErrors();
 							if($errors==false){
 								echo json_encode($this->controller->json);
+							}else{
+								echo json_encode(array(
+									'dit_errors'=>$errors
+								));
+							}
+							break;
+						case 'jsonView':
+							header('Content-type: application/json; charset=utf-8');
+							$errors = ErrorHandler::jsonErrors();
+							if($errors==false){
+								$json = $this->controller->json;
+								if(!is_array($json)) $json = array();
+
+								ob_start();
+								$view = new View();
+								$view->render($this->controller->view);
+								$json['view'] = ob_get_clean();
+
+								echo json_encode($json);
 							}else{
 								echo json_encode(array(
 									'dit_errors'=>$errors
