@@ -59,6 +59,25 @@ class Header {
 		if(isset(self::$codes[$status])){
 			header("Status: ".$status." ".self::$codes[$status]);
 			header("HTTP/1.0 ".$status." ".self::$codes[$status]);
+			switch ($status){
+				case 404:
+				case 403:
+					$file = DIT_APP_DIR.DIT_CONTROLLERS_FOLDER.DS.'ErrorsController.php';
+					$controller = DIT_APP_NAMESPACE.'\\'.DIT_CONTROLLERS_FOLDER.'\\'.'ErrorsController';
+					if(file_exists($file)){
+						$controller = new $controller();
+						$action = 'error'.$status.'Action';
+						if(method_exists($controller,$action)) {
+							$controller->$action();
+							header('Content-type: text/html; charset=utf-8');
+							if($controller->view!=null){
+								$view = new View();
+								$view->render($controller->view);
+							}
+						}
+					}
+					break;
+			}
 			return true;
 		}else{
 			return false;

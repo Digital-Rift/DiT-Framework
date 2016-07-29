@@ -15,7 +15,7 @@ namespace DiTFramework;
 class Cache{
 	private $cache = null;
 
-	function __construct($file,$site_mode=false){
+	function __construct($file,$site_mode=false,$date_mode=false){
 		if($site_mode!=false){
 			$cache_dir = DIT_PUBLIC_DIR.'cache'.DS;
 			$cache_site_dir = $cache_dir.DIT_SITE_NAME.DS;
@@ -23,8 +23,18 @@ class Cache{
 			Files::makeDir($cache_site_dir);
 			$this->cache = $cache_site_dir.$file;
 		}else{
-			Files::makeDir(DIT_APP_DIR.DIT_CACHE_FOLDER.DS);
-			$this->cache = DIT_APP_DIR.DIT_CACHE_FOLDER.DS.$file.'_'.DIT_SITE_NAME;
+			if($date_mode){
+				Files::makeDir(DIT_APP_DIR.DIT_CACHE_FOLDER.DS);
+				$this->cache = DIT_APP_DIR.DIT_CACHE_FOLDER.DS.$file.'_'.DIT_SITE_NAME;
+				$file_time = filemtime($this->cache);
+				$next_time = strtotime('+2 day',$file_time);
+				if($file_time>time()){
+					unlink($this->cache);
+				}
+			}else{
+				Files::makeDir(DIT_APP_DIR.DIT_CACHE_FOLDER.DS);
+				$this->cache = DIT_APP_DIR.DIT_CACHE_FOLDER.DS.$file.'_'.DIT_SITE_NAME;
+			}
 		}
 	}
 

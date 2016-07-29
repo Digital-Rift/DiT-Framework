@@ -128,25 +128,6 @@ class Dispatcher {
 								));
 							}
 							break;
-						case 'jsonView':
-							header('Content-type: application/json; charset=utf-8');
-							$errors = ErrorHandler::jsonErrors();
-							if($errors==false){
-								$json = $this->controller->json;
-								if(!is_array($json)) $json = array();
-
-								ob_start();
-								$view = new View();
-								$view->render($this->controller->view);
-								$json['view'] = ob_get_clean();
-
-								echo json_encode($json);
-							}else{
-								echo json_encode(array(
-									'dit_errors'=>$errors
-								));
-							}
-							break;
 						case 'html':
 							header('Content-type: text/html; charset=utf-8');
 							if($this->controller->view!=null){
