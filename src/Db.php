@@ -185,7 +185,7 @@ class Db{
 			foreach($columns as $c){
 				$r = explode(' ', trim($search));
 				$r = implode('|', $r);
-				$q[] = '('.$c.' REGEXP \''.$r.'\')';
+				$q[] = '(LOWER('.$c.') REGEXP LOWER(\''.$r.'\'))';
 			}
 			if($this->where!=null){
 				$this->where .= ' AND '.$this->genWhere('CQUERY','('.implode(' OR ',$q).')',null);
