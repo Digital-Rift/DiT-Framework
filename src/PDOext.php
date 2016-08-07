@@ -15,15 +15,29 @@ use PDO;
  * @package DiTFramework
  */
 class PDOext extends PDO{
-	public $log_file = null;
+	public $table = null;
+	public $driver = null;
+	public $executeResult;
+	public $executeData;
 
-	public function query($string){
+	public function query($sql,array $data = array()){
+
+		$sql = parent::prepare($sql);
+
 		$start = microtime(true);
-		$query = parent::query($string);
+		$this->executeResult = $sql->execute($data);
+		$this->executeData = $data;
 		$time = round(microtime(true)-$start,4);
-		if(DIT_SAVE_LOGS){
-			file_put_contents($this->log_file,date('c').'; Ip: '.$_SERVER['REMOTE_ADDR'].'; Time: '.$time.'; Query: '.var_export($string,1)."\n",FILE_APPEND);
+
+		if($this->executeResult!=true){
+			$errorInfo = $sql->errorInfo();
+			trigger_error(i18n::t("::driver error: '::error'", array('error'=>$errorInfo[2],'driver'=>$this->driver)));
+		}else{
+			$str = date('c').'; Ip: '.$_SERVER['REMOTE_ADDR'].'; Time: '.$time.'; Query: '.var_export($sql->queryString,1);
+			Log::setLog('table_'.$this->table);
+			Log::addString('table_'.$this->table, $str);
 		}
-		return $query;
+
+		return $sql;
 	}
 }
