@@ -29,7 +29,10 @@ class View extends Assist{
 			if($this->vars!=false){
 				extract((array)$this->vars);
 			}
+			ob_start();
 			require DIT_APP_DIR.DIT_VIEWS_FOLDER.DS.$view.$this->ext;
+			$html = ob_get_clean();
+			echo HtmlMin::minify($html);
 		}else{
 			trigger_error(i18n::t('View not found'));
 		}
