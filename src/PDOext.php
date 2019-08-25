@@ -1,18 +1,21 @@
 <?php
 /**
- * @project DiT Framework
- * @link http://www.dit-cms.org
+ * @project DIT Framework
+ * @link http://digitalrift.org
  * @author Yuriy Seleznev <sendelius@gmail.com>
  * @author Alex Kalantaryan <alex_phant0m@mail.ru>
  * @license MIT https://opensource.org/licenses/MIT
  */
-namespace DiTFramework;
+
+namespace DITFramework;
 
 use PDO;
 
 /**
  * Class PDOext
- * @package DiTFramework
+ * PDO дополнение для записи логов и измерения скорости запросов
+ *
+ * @package DITFramework
  */
 class PDOext extends PDO{
 	public $table = null;
@@ -31,11 +34,7 @@ class PDOext extends PDO{
 
 		if($this->executeResult!=true){
 			$errorInfo = $sql->errorInfo();
-			trigger_error(i18n::t("::driver error: '::error'", array('error'=>$errorInfo[2],'driver'=>$this->driver)));
-		}else{
-			$str = date('c').'; Ip: '.$_SERVER['REMOTE_ADDR'].'; Time: '.$time.'; Query: '.var_export($sql->queryString,1);
-			Log::setLog('table_'.$this->table);
-			Log::addString('table_'.$this->table, $str);
+			trigger_error($this->driver." error: '".$errorInfo[2]."'");
 		}
 
 		return $sql;

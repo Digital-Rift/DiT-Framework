@@ -1,30 +1,65 @@
 <?php
 /**
- * @project DiT Framework
- * @link http://www.dit-cms.org
+ * @project DIT Framework
+ * @link http://digitalrift.org
  * @author Yuriy Seleznev <sendelius@gmail.com>
  * @author Alex Kalantaryan <alex_phant0m@mail.ru>
  * @license MIT https://opensource.org/licenses/MIT
  */
-namespace DiTFramework;
+
+namespace DITFramework;
 
 /**
  * Class Model
- * @package DiTFramework
+ * Вспомагательный класс для моделей
+ *
+ * @package DITFramework
+ * @property Session $session
+ * @property Popup $popup
+ * @property Form $form
+ * @property Query $query
+ * @property Template $template
+ * @property Files $files
  */
-class Model extends Assist{
+class Model{
+    public $session;
+    public $popup;
+    public $form;
+    public $query;
+    public $template;
+    public $files;
+
+    public function __construct(){
+        $this->session = Instance::getSessionInstance();
+        $this->popup = Instance::getPopupInstance();
+        $this->form = Instance::getFormInstance();
+        $this->query = Instance::getQueryInstance();
+        $this->template = Instance::getTemplateInstance();
+        $this->files = Instance::getFilesInstance();
+    }
+
 	public function table($table){
 		$db = new Db();
 		$db->connect(
-			DIT_DB_DRIVER,
-			DIT_DB_NAME,
-			DIT_DB_HOST,
-			DIT_DB_USER,
-			DIT_DB_PASSWORD,
+			Storage::$dbName,
+			Storage::$dbHost,
+			Storage::$dbUser,
+			Storage::$dbPassword,
 			$table,
-			DIT_DB_TABLE_PREFIX,
-			DIT_DB_CHARSET
+            Storage::$dbTablePrefix,
+            Storage::$dbCharset,
+            Storage::$dbDriver
 		);
 		return $db;
 	}
+	
+    function loadModel($modelName){
+        if(!isset($this->$modelName)) {
+            $this->$modelName = Instance::getModelInstance($modelName);
+        }
+    }
+
+    public function getWebRoot(){
+        return Storage::$webRoot;
+    }
 }

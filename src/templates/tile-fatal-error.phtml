@@ -1,0 +1,12 @@
+<?php
+/**
+ * @var \DITFramework\Template $this
+ */
+?>
+<div class="ditFatalError">
+    <strong>Fatal error:</strong><br/>
+    <?php foreach (\DITFramework\Storage::$fatalError['message'] as $item): ?>
+        <span><?=$item?></span><br/>
+    <?php endforeach; ?>
+    <span class="ditFatalErrorHint">File: <?=\DITFramework\Storage::$fatalError['file']?> on line <?=\DITFramework\Storage::$fatalError['line']?></span>
+</div>

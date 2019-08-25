@@ -1,30 +1,26 @@
 <?php
 /**
- * @project DiT Framework
- * @link http://www.dit-cms.org
+ * @project DIT Framework
+ * @link http://digitalrift.org
  * @author Yuriy Seleznev <sendelius@gmail.com>
  * @author Alex Kalantaryan <alex_phant0m@mail.ru>
  * @license MIT https://opensource.org/licenses/MIT
  */
-namespace DiTFramework;
+
+namespace DITFramework;
 
 /**
  * Class Session
- * @package DiTFramework
+ * Класс для управления сессиями
+ *
+ * @package DITFramework
  */
 class Session {
-	public $id = null;
-
-	public function __construct(){
-		if(!session_id()) session_start();
-		$this->id = session_id();
-	}
-
-	public function set($key,$value){
+	function set($key,$value){
 		$_SESSION[$key] = $value;
 	}
 
-	public function get($key,$value=null){
+	function get($key,$value=null){
 		if(!empty($value)){
 			if(isset($_SESSION[$key][$value])){
 				return $_SESSION[$key][$value];
@@ -40,7 +36,7 @@ class Session {
 		}
 	}
 
-	public function exist($key,$value=null){
+	function exist($key,$value=null){
 		if(!empty($value)){
 			if(isset($_SESSION[$key][$value])){
 				return true;
@@ -56,13 +52,15 @@ class Session {
 		}
 	}
 
-	public function regenerate(){
-		if(session_id()) session_regenerate_id();
-		$this->id = session_id();
-	}
+	function getId(){
+	    return session_id();
+    }
 
-	public function destroy(){
-		if(session_id()) session_destroy();
-		$this->id = null;
-	}
+    function regenerate(){
+        if(session_id()) session_regenerate_id();
+    }
+
+    function destroy(){
+        if(session_id()) session_destroy();
+    }
 }

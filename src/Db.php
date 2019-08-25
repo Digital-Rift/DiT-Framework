@@ -1,24 +1,28 @@
 <?php
 /**
- * @project DiT Framework
- * @link http://www.dit-cms.org
+ * @project DIT Framework
+ * @link http://digitalrift.org
  * @author Yuriy Seleznev <sendelius@gmail.com>
  * @author Alex Kalantaryan <alex_phant0m@mail.ru>
  * @license MIT https://opensource.org/licenses/MIT
  */
-namespace DiTFramework;
+
+namespace DITFramework;
 
 use PDO;
 use PDOException;
 
 /**
  * Class Db
- * @package DiTFramework
+ * Класс для работы с базой данных
+ *
+ * @package DITFramework
  * @property PDOext $sql
  */
 class Db{
 	protected $sql;
 	protected $query = null;
+    protected $cquery = null;
 	protected $first = null;
 	protected $where = null;
 	protected $limit = null;
@@ -41,7 +45,7 @@ class Db{
 		if($newInstance === true) self::$_sqlInstance = null;
 	}
 
-	public function connect($driver,$db_name,$host,$user,$password,$table,$table_prefix=null,$charset='utf8'){
+	public function connect($db_name,$host,$user,$password,$table,$table_prefix=null,$charset='utf8',$driver='mysql'){
 		$this->table = $table_prefix.$table;
 		$dsn = $driver.':dbname='.$db_name.';host='.$host;
 		try {
@@ -52,7 +56,7 @@ class Db{
 			$this->sql->table = $this->table;
 			$this->sql->driver = $driver;
 		} catch (PDOException $e) {
-			trigger_error(i18n::t("Error connecting to database: '::error'", array('error'=>$e->getMessage())),E_USER_ERROR);
+			trigger_error("Error connecting to database: '".$e->getMessage()."'",E_USER_ERROR);
 		}
 	}
 
@@ -127,26 +131,39 @@ class Db{
 
 	public function multiWhere($cond=array()){
 		$where = null;
+		$i = 1;
+		$count = count($cond);
 		foreach($cond as $val){
 			$where .= $this->genWhere($val[0],$val[1],$val[2]).' ';
-			if(isset($val[3])){
+			if(isset($val[3]) and $i<$count){
 				$where .= $val[3].' ';
 			}
+            $i++;
 		}
 		if($this->where!=null){
 			$this->where .= ' '.$where;
 		}else{
-			$this->where = 'WHERE '.$where;
+			$this->where = $this->cquery.' WHERE '.$where;
 		}
 		return $this;
 	}
+
+    public function cquery($value){
+        $this->cquery .= ' '.$value;
+        return $this;
+    }
+
+    public function emptyWhere(){
+        $this->where = $this->cquery.' ';
+        return $this;
+    }
 
 	public function where($cond,$key,$value){
 		$where = $this->genWhere($cond,$key,$value);
 		if($this->where!=null){
 			$this->where .= ' '.$where;
 		}else{
-			$this->where = 'WHERE '.$where;
+			$this->where = $this->cquery.' WHERE '.$where;
 		}
 		return $this;
 	}
@@ -179,7 +196,7 @@ class Db{
 		return $this;
 	}
 
-	public function fullTextSearch($columns=array(),$search){
+	public function fullTextSearch(array $columns,$search){
 		if(count($columns)>0){
 			$q = array();
 			foreach($columns as $c){
@@ -190,7 +207,7 @@ class Db{
 			if($this->where!=null){
 				$this->where .= ' AND '.$this->genWhere('CQUERY','('.implode(' OR ',$q).')',null);
 			}else{
-				$this->where = 'WHERE '.$this->genWhere('CQUERY','('.implode(' OR ',$q).')',null);
+				$this->where = $this->cquery.' WHERE '.$this->genWhere('CQUERY','('.implode(' OR ',$q).')',null);
 			}
 		}
 		return $this;

@@ -1,0 +1,17 @@
+<?php
+/**
+ * @var \DITFramework\Template $this
+ */
+?>
+<style>body{margin:20px;background:#ccc;}#DiT-Fatal-Error{margin-top:50px;padding:1px 10px;color:#de0b15;font-family:Tahoma,sans-serif;font-size:21px;background: #23282D;box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.75);}#DiT-Fatal-Error .hint{color: #ccc;}</style>
+<div id="DiT-Fatal-Error">
+	<p>
+		<span><b>Fatal error: </b></span><br/>
+
+        <?php foreach ($this->fatalError['message'] as $item): ?>
+            <span><?=$item?></span><br/>
+        <?php endforeach; ?>
+
+		<span class="hint">File: <?=$this->fatalError['file']?> on line <?=$this->fatalError['line']?></span>
+	</p>
+</div>

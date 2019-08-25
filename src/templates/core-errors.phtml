@@ -1,0 +1,17 @@
+<?php
+/**
+ * @var \DITFramework\Template $this
+ */
+if(count($this->errors)>0):
+?>
+<style>#DiT-Errors p{margin: 13px 0}#DiT-Errors em{color: #ccc}#DiT-Errors{position:fixed;z-index:9999;bottom:10px;right:10px;width:400px;padding:1px 10px;font-family:Tahoma,sans-serif;font-size:13px;background: #23282D;box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.75);color:#ff472c;}
+</style>
+<div id="DiT-Errors">
+	<?php foreach($this->errors as $error): ?>
+		<p>
+			<span><b>Error:</b> <?=$error['message']?></span><br/>
+			<em>File: <?=$error['file']?> (<?=$error['line']?>)</em>
+		</p>
+	<?php endforeach; ?>
+</div>
+<?php endif; ?>

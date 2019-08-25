@@ -1,37 +1,97 @@
 <?php
 /**
- * @project DiT Framework
- * @link http://www.dit-cms.org
+ * @project DIT Framework
+ * @link http://digitalrift.org
  * @author Yuriy Seleznev <sendelius@gmail.com>
  * @author Alex Kalantaryan <alex_phant0m@mail.ru>
  * @license MIT https://opensource.org/licenses/MIT
  */
-namespace DiTFramework;
+
+namespace DITFramework;
 
 /**
  * Class Controller
- * @package DiTFramework
+ * Вспомогательный класс для контроллеров приложения
+ *
+ * @package DITFramework
+ * @property Session $session
+ * @property Popup $popup
+ * @property Form $form
+ * @property Query $query
+ * @property Template $template
+ * @property Files $files
  */
-class Controller extends Assist{
-	public $view;
-	public $query;
-	public $json;
-	public $status=200;
-	public $type='html';
+class Controller{
+    private $status=200;
+    private $type='html';
+    private $jsonData;
+    public $is_redirect = false;
+    public $is_reload = false;
+    public $mainTemplate;
+    public $outputTemplate;
+    public $session;
+    public $popup;
+    public $form;
+    public $query;
+    public $template;
+    public $files;
 
-	public function getQuery($key){
-		if(isset($this->query[$key])){
-			return $this->query[$key];
-		}else{
-			return false;
-		}
-	}
+    public function __construct(){
+        $this->session = Instance::getSessionInstance();
+        $this->popup = Instance::getPopupInstance();
+        $this->form = Instance::getFormInstance();
+        $this->query = Instance::getQueryInstance();
+        $this->template = Instance::getTemplateInstance();
+        $this->files = Instance::getFilesInstance();
+    }
+    
+    function loadModel($modelName){
+        if(!isset($this->$modelName)) {
+            $this->$modelName = Instance::getModelInstance($modelName);
+        }
+    }
 
-	public function existQuery($key){
-		if(isset($this->query[$key])){
-			return true;
-		}else{
-			return false;
-		}
-	}
+    public function getType(){
+        return $this->type;
+    }
+    public function getStatus(){
+        return $this->status;
+    }
+    public function setStatus($status){
+        $this->status = $status;
+    }
+    public function error404(){
+        $this->status=404;
+    }
+    public function error403(){
+        $this->status=403;
+    }
+    public function isHtmlType(){
+        $this->type='html';
+    }
+    public function isJsonType(){
+        $this->type='json';
+    }
+    public function setJsonData($data){
+        $this->jsonData = $data;
+    }
+    public function getJsonData(){
+        return $this->jsonData;
+    }
+    public function redirect($link){
+        $this->setStatus(302);
+        if($link!=Storage::$webRoot) $link = Storage::$webRoot.$link;
+        $this->is_redirect = $link;
+    }
+    public function redirectToHome(){
+        $this->setStatus(302);
+        $this->is_redirect = Storage::$webRoot;
+    }
+    public function reload(){
+        $this->setStatus(302);
+        $this->is_reload = true;
+    }
+    public function getWebRoot(){
+        return Storage::$webRoot;
+    }
 }
