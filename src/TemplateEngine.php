@@ -206,7 +206,7 @@ class TemplateEngine{
             if(isset(Storage::$scripts[$package]) and is_array(Storage::$scripts[$package])){
                 foreach (Storage::$scripts[$package] as $key=>$item){
                     if(isset($item['type']) and $item['type']=='cdn'){
-                        $result .= "\t".'<script src="' . Storage::$webRoot . $item['file'] . '"></script>'."\n";
+                        $result .= "\t".'<script src="' . $item['file'] . '"></script>'."\n";
                         unset(Storage::$scripts[$package][$key]);
                     }
                 }
