@@ -78,9 +78,11 @@ class Controller{
     public function getJsonData(){
         return $this->jsonData;
     }
-    public function redirect($link){
+    public function redirect($link,$webroot=true){
         $this->setStatus(302);
-        if($link!=Storage::$webRoot) $link = Storage::$webRoot.$link;
+        if($webroot){
+            if($link!=Storage::$webRoot) $link = Storage::$webRoot.$link;
+        }
         $this->is_redirect = $link;
     }
     public function redirectToHome(){
