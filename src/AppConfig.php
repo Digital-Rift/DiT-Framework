@@ -81,17 +81,17 @@ class AppConfig{
         );
     }
 
-    public function setStyle($file,$version='1.0',$package='main'){
+    public function setStyle($file,$package='main'){
         Storage::$styles[$package][md5($file)] = array(
             'file'=>$file,
-            'version'=>$version,
+            'version'=>filemtime($file),
         );
     }
 
-    public function setScript($file,$version='1.0',$package='main'){
+    public function setScript($file,$package='main'){
         Storage::$scripts[$package][md5($file)] = array(
             'file'=>$file,
-            'version'=>$version,
+            'version'=>filemtime($file),
             'type'=>'file',
         );
     }
