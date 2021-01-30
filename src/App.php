@@ -49,7 +49,7 @@ class App{
         $reflection = new \ReflectionClass($configAppClass);
         Storage::$appDir = dirname($reflection->getFileName()) . DIRECTORY_SEPARATOR;
 
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS,1);
+        $backtrace = debug_backtrace(false);
         if(isset($backtrace[0]['file'])){
             Storage::$publicDir = dirname($backtrace[0]['file']) . DIRECTORY_SEPARATOR;
         }else{
