@@ -19,7 +19,6 @@
     "ext-pdo": "*",
     "ext-json": "*",
     "ext-fileinfo": "*",
-    "werkint/jsmin": "1.*",
     "leafo/lessphp": "0.5.*"
   },
   "autoload": {

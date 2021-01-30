@@ -198,7 +198,7 @@ class TemplateEngine{
             $script_min .= file_get_contents(Storage::$frameworkAssetsDir.'js'.DIRECTORY_SEPARATOR.'validate_ru.js') . "\n";
             $script_min .= file_get_contents(Storage::$frameworkAssetsDir.'js'.DIRECTORY_SEPARATOR.'jquery.maskedinput.min.js') . "\n";
             $script_min .= file_get_contents(Storage::$frameworkAssetsDir.'js'.DIRECTORY_SEPARATOR.'framework.js') . "\n";
-            if(Storage::$minifyScripts and strlen($script_min)>0) $script_min = \JsMin\Minify::minify($script_min);
+            if(Storage::$minifyScripts and strlen($script_min)>0) $script_min = MinifyJS::minify($script_min);
             $cache->save($script_min);
         }
         $result .= "\t".'<script src="' . Storage::$webRoot . 'cache/' . $name . '"></script>'."\n";
@@ -222,7 +222,7 @@ class TemplateEngine{
                         $script_min .= $script_content . "\n";
                     }
                     array_map("unlink", glob( Storage::$publicDir . 'cache' . DIRECTORY_SEPARATOR . 'scripts_' . $package . '_*'));
-                    if(Storage::$minifyScripts and strlen($script_min)>0) $script_min = \JsMin\Minify::minify($script_min);
+                    if(Storage::$minifyScripts and strlen($script_min)>0) $script_min = MinifyJS::minify($script_min);
                     $cache->save($script_min);
                 }
                 $result .= "\t".'<script src="' . Storage::$webRoot . 'cache/' . $name . '"></script>'."\n";
